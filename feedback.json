@@ -1,0 +1,38 @@
+[
+  {
+    "id": "sample-1",
+    "name": "Sonia",
+    "email": "sonia.yacintaman@binus.ac.id",
+    "eventName": "RnD Rolling",
+    "division": "RnD",
+    "rating": 1,
+    "comment": "This is confusing.",
+    "suggestion": "Give more time pls.",
+    "createdAt": "2025-11-23T10:00:00.000Z",
+    "status": "open"
+  },
+  {
+    "id": "sample-2",
+    "name": "Rando",
+    "email": "Rando@gmail.com",
+    "eventName": "Rolling IDK",
+    "division": "RnD",
+    "rating": 1,
+    "comment": "How do i do this",
+    "suggestion": "TEACH ME HOW TO DO THIS FIRST???",
+    "createdAt": "2025-11-23T12:30:00.000Z",
+    "status": "in-review"
+  },
+  {
+    "id": "99845de5-606d-406a-bdc6-d84a74e23556",
+    "name": "Sylvia",
+    "email": "soniar.y15@gmail.com",
+    "eventName": "es",
+    "division": "LnT",
+    "rating": 5,
+    "comment": "aa",
+    "suggestion": "aa",
+    "createdAt": "2025-11-24T08:03:44.681Z",
+    "status": "resolved"
+  }
+]

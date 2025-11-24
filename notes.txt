@@ -1,0 +1,55 @@
+Simple backend API for "BNCC Internal Event Feedback System".
+
+Features:
+- CRUD API for feedback
+- Default storage: JSON file (data/feedback.json)
+- Validation for required fields and enums
+- Simple search & status filter on list endpoint
+
+Tech:
+- Node.js, Express
+- UUID for id
+
+Endpoints:
+- POST /api/feedback
+- GET /api/feedback
+- GET /api/feedback/:id
+- PUT /api/feedback/:id
+- DELETE /api/feedback/:id
+- GET /api/health (status: ok)
+
+Minimal API contract (examples):
+- POST /api/feedback Body (JSON): { "name": "string", "email": "string", "eventName": "string", "division": "RnD", "rating": 4, "comment": "optional", "suggestion": "optional" }
+
+- GET /api/feedback?status=open&search=react
+
+- PUT /api/feedback/:id Body (JSON) - partial fields allowed { "status": "resolved", "rating": 5 }
+
+- DELETE /api/feedback/:id
+
+Run locally:
+1. Install npm install
+2. tart (dev with nodemon) npm run dev or npm start
+3. By default server runs at http://localhost:4000
+
+Env variables:
+- PORT: port to run (default 4000)
+- FEEDBACK_FILE: path to JSON file (default: ./data/feedback.json)
+- FILE_STORAGE: set to none to use in-memory (no file writes)
+
+Examples (curl):
+Create: curl -X POST http://localhost:4000/api/feedback
+-H "Content-Type: application/json"
+-d '{"name":"Sonia","email":"sonia@example.com","eventName":"BNCC Talk","division":"RnD","rating":5,"comment":"Nice","suggestion":"More Q&A"}'
+
+List: curl http://localhost:4000/api/feedback
+
+Filter: curl "http://localhost:4000/api/feedback?status=open&search=bncc"
+
+Get one: curl http://localhost:4000/api/feedback/<id>
+
+Update (partial): curl -X PUT http://localhost:4000/api/feedback/<id>
+-H "Content-Type: application/json"
+-d '{"status":"in-review","rating":4}'
+
+Delete: curl -X DELETE http://localhost:4000/api/feedback/<id>
