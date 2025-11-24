@@ -28,12 +28,6 @@ How to: menjalankan proyek ini menggunakan localhost, struktur file penting, car
   - http://localhost:4000
   - Jika server berjalan di port lain, lihat output terminal yang biasanya menampilkan port.
 
-Jika ingin menjalankan di port tertentu:
-- Unix/macOS:
-  - PORT=4000 npm start
-- Windows (PowerShell):
-  - $env:PORT=4000; npm start
-
 ## Menyimpan / Mengedit file
 - File HTML/CSS/JS yang akan di-serve statically taruh di folder `public`.
   - Contoh: edit `public/index.html`, `public/css/style.css`, `public/js/main.js`.
