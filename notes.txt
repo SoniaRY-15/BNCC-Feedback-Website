@@ -1,55 +1,124 @@
-Simple backend API for "BNCC Internal Event Feedback System".
 
-Features:
-- CRUD API for feedback
-- Default storage: JSON file (data/feedback.json)
-- Validation for required fields and enums
-- Simple search & status filter on list endpoint
+1) package.json (script penting)
+- "start": menjalankan server production (mis. node server.js)
+- "dev": menjalankan server development (mis. nodemon server.js)
+- "build": bundling frontend bila ada (mis. webpack/parcel/vite)
 
-Tech:
-- Node.js, Express
-- UUID for id
+2) server.js / app.js
+Fungsi umum:
+- Membuat instance server (mis. Express)
+- Mengatur middleware (bodyParser/json, cors, static files)
+- Men-serve folder `public`:
+  - app.use(express.static(path.join(__dirname, 'public')));
+- Men-setup routing API:
+  - app.use('/api/feedback', feedbackRouter);
+- Menangani error umum dan 404
+- Menjalankan server di port dari process.env.PORT atau default 4000
 
-Endpoints:
-- POST /api/feedback
-- GET /api/feedback
-- GET /api/feedback/:id
-- PUT /api/feedback/:id
-- DELETE /api/feedback/:id
-- GET /api/health (status: ok)
+Contoh alur:
+- import express, path
+- app.use(express.json())
+- app.use(express.static(path.join(__dirname, 'public')))
+- app.use('/api/*', routes)
+- app.listen(PORT, () => console.log(`Server on ${PORT}`))
 
-Minimal API contract (examples):
-- POST /api/feedback Body (JSON): { "name": "string", "email": "string", "eventName": "string", "division": "RnD", "rating": 4, "comment": "optional", "suggestion": "optional" }
+3) src/index.js / src/main.js (entry client-side)
+- Menginisialisasi aplikasi frontend (vanilla JS atau framework)
+- Menyambung event listeners di DOM
+- Memanggil API untuk mengambil/mengirim data
 
-- GET /api/feedback?status=open&search=react
+4) Routes / Controllers (backend)
+- routes/feedback.js:
+  - GET /api/feedback -> controller.getAllFeedback
+  - POST /api/feedback -> controller.createFeedback
+  - DELETE /api/feedback/:id -> controller.deleteFeedback (jika ada)
+- controllers/feedbackController.js:
+  - getAllFeedback(req, res): ambil data dari storage/db -> res.json(data)
+  - createFeedback(req, res): validasi input -> simpan -> res.status(201).json(created)
+  - Gunakan try/catch dan kirim response error yang jelas (status + pesan)
 
-- PUT /api/feedback/:id Body (JSON) - partial fields allowed { "status": "resolved", "rating": 5 }
+5) Storage: file / database
+- Jika menggunakan file JSON (sederhana):
+  - path: data/feedback.json
+  - Baca file dengan fs.readFileSync / fs.promises
+  - Untuk menyimpan: fs.writeFileSync atau menggunakan library yang aman concurrent
+  - Pastikan validasi sebelum menulis
+- Jika menggunakan DB (Mongo/Postgres):
+  - Pastikan connection string di .env (DATABASE_URL)
+  - Connection di file terpisah (db.js) lalu diimport ke model
 
-- DELETE /api/feedback/:id
+6) public/index.html
+- Struktur minimal:
+  - <!DOCTYPE html>
+  - <head> link ke css & meta </head>
+  - <body> konten + <script src="/js/main.js"></script> </body>
+- Pastikan script src mengarah ke file di folder public/js/
 
-Run locally:
-1. Install npm install
-2. tart (dev with nodemon) npm run dev or npm start
-3. By default server runs at http://localhost:4000
+7) public/js/main.js (frontend logic)
+- Contoh fungsi:
+  - fetchFeedback() -> GET /api/feedback -> render ke DOM
+  - submitForm(event) -> ambil input, POST ke /api/feedback, update UI
+- Gunakan async/await dengan try/catch untuk error handling
 
-Env variables:
-- PORT: port to run (default 4000)
-- FEEDBACK_FILE: path to JSON file (default: ./data/feedback.json)
-- FILE_STORAGE: set to none to use in-memory (no file writes)
+8) util/helpers.js
+- Fungsi utilitas yang sering dipakai:
+  - formatDate(ts)
+  - validateInput(obj) -> mengembalikan { ok: boolean, errors: [] }
 
-Examples (curl):
-Create: curl -X POST http://localhost:4000/api/feedback
--H "Content-Type: application/json"
--d '{"name":"Sonia","email":"sonia@example.com","eventName":"BNCC Talk","division":"RnD","rating":5,"comment":"Nice","suggestion":"More Q&A"}'
+9) Environment & Konfigurasi
+- process.env.PORT -> port server
+- process.env.NODE_ENV -> development/production
+- Jangan commit secrets (API keys, DB credentials)
 
-List: curl http://localhost:4000/api/feedback
+10) Error handling & Logging
+- Gunakan centralized error handler di Express:
+  - app.use((err, req, res, next) => { console.error(err); res.status(500).json({ error: 'Internal Server Error' }) })
+- Tambahkan validasi input endpoint untuk menghindari corrupt data.
+- Untuk development gunakan logger seperti morgan.
 
-Filter: curl "http://localhost:4000/api/feedback?status=open&search=bncc"
+11) Best practices commit & branch
+- Branch naming: feat/, fix/, chore/
+- Commit message: jenis: deskripsi singkat (mis. feat: tambah endpoint feedback)
+- Buat PR untuk review
 
-Get one: curl http://localhost:4000/api/feedback/<id>
+12) Contoh potongan kode (backend - Express)
+- GET /api/feedback:
+  - async function getAllFeedback(req, res) {
+      try {
+        const data = await FeedbackModel.getAll();
+        res.json(data);
+      } catch (err) {
+        res.status(500).json({ error: 'Gagal mengambil data' });
+      }
+    }
 
-Update (partial): curl -X PUT http://localhost:4000/api/feedback/<id>
--H "Content-Type: application/json"
--d '{"status":"in-review","rating":4}'
+- POST /api/feedback:
+  - async function createFeedback(req, res) {
+      const { name, message, rating } = req.body;
+      if (!name || !message) return res.status(400).json({ error: 'Field wajib belum diisi' });
+      try {
+        const newItem = await FeedbackModel.create({ name, message, rating });
+        res.status(201).json(newItem);
+      } catch (err) {
+        res.status(500).json({ error: 'Gagal menyimpan data' });
+      }
+    }
 
-Delete: curl -X DELETE http://localhost:4000/api/feedback/<id>
+13) To-do / Saran pengembangan
+- Tambah validasi input lebih kuat (Joi / Yup)
+- Implementasi pagination untuk GET feedback jika besar
+- Integrasi database (MongoDB/Postgres) jika saat ini pakai file JSON
+- Tambah unit tests (Jest) untuk controller penting
+- Setup CI (GitHub Actions) untuk lint & test
+
+14) Quick checklist saat men-deploy lokal
+- [ ] npm install
+- [ ] buat folder public & masukkan index.html
+- [ ] buat file .env jika perlu
+- [ ] jalankan npm run dev atau npm start
+- [ ] buka http://localhost:4000
+
+Jika ingin, aku bisa:
+- Menulis dokumentasi endpoint lengkap berdasarkan file nyata di repo.
+- Membuat contoh file server.js / package.json yang siap pakai.
+- Menyesuaikan catatan ini kalau kamu beri daftar file nyata dalam repo.
