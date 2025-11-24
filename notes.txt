@@ -1,10 +1,9 @@
-
-1) package.json (script penting)
+1) package.json 
 - "start": menjalankan server production (mis. node server.js)
 - "dev": menjalankan server development (mis. nodemon server.js)
 - "build": bundling frontend bila ada (mis. webpack/parcel/vite)
 
-2) server.js / app.js
+2) server.js
 Fungsi umum:
 - Membuat instance server (mis. Express)
 - Mengatur middleware (bodyParser/json, cors, static files)
@@ -22,12 +21,7 @@ Contoh alur:
 - app.use('/api/*', routes)
 - app.listen(PORT, () => console.log(`Server on ${PORT}`))
 
-3) src/index.js / src/main.js (entry client-side)
-- Menginisialisasi aplikasi frontend (vanilla JS atau framework)
-- Menyambung event listeners di DOM
-- Memanggil API untuk mengambil/mengirim data
-
-4) Routes / Controllers (backend)
+3) Routes / Controllers (backend)
 - routes/feedback.js:
   - GET /api/feedback -> controller.getAllFeedback
   - POST /api/feedback -> controller.createFeedback
@@ -37,51 +31,33 @@ Contoh alur:
   - createFeedback(req, res): validasi input -> simpan -> res.status(201).json(created)
   - Gunakan try/catch dan kirim response error yang jelas (status + pesan)
 
-5) Storage: file / database
-- Jika menggunakan file JSON (sederhana):
+4) Storage: file / database
+- Using file JSON:
   - path: data/feedback.json
   - Baca file dengan fs.readFileSync / fs.promises
   - Untuk menyimpan: fs.writeFileSync atau menggunakan library yang aman concurrent
   - Pastikan validasi sebelum menulis
-- Jika menggunakan DB (Mongo/Postgres):
-  - Pastikan connection string di .env (DATABASE_URL)
-  - Connection di file terpisah (db.js) lalu diimport ke model
 
-6) public/index.html
+5) public/index.html
 - Struktur minimal:
   - <!DOCTYPE html>
   - <head> link ke css & meta </head>
   - <body> konten + <script src="/js/main.js"></script> </body>
 - Pastikan script src mengarah ke file di folder public/js/
 
-7) public/js/main.js (frontend logic)
+6) public/js/main.js (frontend logic)
 - Contoh fungsi:
   - fetchFeedback() -> GET /api/feedback -> render ke DOM
   - submitForm(event) -> ambil input, POST ke /api/feedback, update UI
 - Gunakan async/await dengan try/catch untuk error handling
 
-8) util/helpers.js
-- Fungsi utilitas yang sering dipakai:
-  - formatDate(ts)
-  - validateInput(obj) -> mengembalikan { ok: boolean, errors: [] }
-
-9) Environment & Konfigurasi
-- process.env.PORT -> port server
-- process.env.NODE_ENV -> development/production
-- Jangan commit secrets (API keys, DB credentials)
-
-10) Error handling & Logging
+7) Error handling & Logging
 - Gunakan centralized error handler di Express:
   - app.use((err, req, res, next) => { console.error(err); res.status(500).json({ error: 'Internal Server Error' }) })
 - Tambahkan validasi input endpoint untuk menghindari corrupt data.
 - Untuk development gunakan logger seperti morgan.
 
-11) Best practices commit & branch
-- Branch naming: feat/, fix/, chore/
-- Commit message: jenis: deskripsi singkat (mis. feat: tambah endpoint feedback)
-- Buat PR untuk review
-
-12) Contoh potongan kode (backend - Express)
+8) Code snippets (backend - Express)
 - GET /api/feedback:
   - async function getAllFeedback(req, res) {
       try {
@@ -104,21 +80,9 @@ Contoh alur:
       }
     }
 
-13) To-do / Saran pengembangan
-- Tambah validasi input lebih kuat (Joi / Yup)
-- Implementasi pagination untuk GET feedback jika besar
-- Integrasi database (MongoDB/Postgres) jika saat ini pakai file JSON
-- Tambah unit tests (Jest) untuk controller penting
-- Setup CI (GitHub Actions) untuk lint & test
-
-14) Quick checklist saat men-deploy lokal
+9) Quick checklist saat men-deploy lokal
 - [ ] npm install
-- [ ] buat folder public & masukkan index.html
-- [ ] buat file .env jika perlu
 - [ ] jalankan npm run dev atau npm start
 - [ ] buka http://localhost:4000
 
-Jika ingin, aku bisa:
-- Menulis dokumentasi endpoint lengkap berdasarkan file nyata di repo.
-- Membuat contoh file server.js / package.json yang siap pakai.
-- Menyesuaikan catatan ini kalau kamu beri daftar file nyata dalam repo.
+
