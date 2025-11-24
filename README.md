@@ -1,7 +1,7 @@
 # BNCC-Feedback-Website (On how to save and open files)
 RnD Rolling Quest
 
-Panduan ini berisi langkah-langkah untuk menjalankan proyek ini menggunakan localhost, struktur file penting, cara menyimpan/membuka file, and troubleshooting. 
+How to: menjalankan proyek ini menggunakan localhost, struktur file penting, cara menyimpan/membuka file, and troubleshooting. 
 
 ## What we need:
 - Node.js 
