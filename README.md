@@ -56,7 +56,6 @@ Jika proyek menggunakan environment variables, buat file `.env` di root:
   - PORT=4000
   - NODE_ENV=development
   - DATABASE_URL=...
-- Pastikan `.env` tidak ter-commit jika berisi secret (tambahkan .env ke .gitignore).
 
 ## Debugging & Troubleshooting
 - Tidak bisa mengakses http://localhost:4000:
@@ -71,5 +70,3 @@ Jika proyek menggunakan environment variables, buat file `.env` di root:
 - Port sudah dipakai:
   - Matikan proses yang pakai port atau ubah PORT.
 
----
-Jika kamu mau aku tambahkan instruksi spesifik berdasarkan file nyata dalam repo (mis. nama server file, script npm, atau API endpoints), beri tahu dan aku bisa menulis README yang disesuaikan.
