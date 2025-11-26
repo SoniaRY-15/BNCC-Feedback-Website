@@ -32,7 +32,7 @@ How to: menjalankan proyek ini menggunakan localhost, struktur file penting, car
 - File HTML/CSS/JS yang akan di-serve statically taruh di folder `public`.
   - Contoh: edit `public/index.html`, `public/css/style.css`, `public/js/main.js`.
 - File backend (misal express) biasanya di folder root atau `src/`.
-  - Contoh: `server.js`, `app.js`, `src/routes/`, `src/controllers/`.
+  - Contoh: `server.js`, `route.js`, `store.js` or `src/routes.js`, `src/server.js`.
 - Setelah menyimpan file:
   - Jika memakai watcher (in this case, I'm using nodemon), perubahan akan reload otomatis.
   - Jika tidak, restart server: Ctrl+C -> npm start
